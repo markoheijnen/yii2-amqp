@@ -32,7 +32,7 @@ class AmqpListenerController extends AmqpConsoleController
      */
     public $interpreters = [];
 
-    public function actionRun(array $queueNames)
+    public function actionRun(array $queueNames = [])
     {
         $this->amqp->listen($queueNames, [$this, 'callback']);
     }

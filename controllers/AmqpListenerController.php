@@ -32,9 +32,9 @@ class AmqpListenerController extends AmqpConsoleController
      */
     public $interpreters = [];
 
-    public function actionRun($routingKey = '#', $type = Amqp::TYPE_TOPIC)
+    public function actionRun(array $queueNames)
     {
-        $this->amqp->listen($this->exchange, $routingKey, [$this, 'callback'], $type);
+        $this->amqp->listen($queueNames, [$this, 'callback']);
     }
 
     public function callback(AMQPMessage $msg)
@@ -54,12 +54,11 @@ class AmqpListenerController extends AmqpConsoleController
         }
 
         if (method_exists($interpreter, $method)) {
-            $info = [
-                'exchange' => $msg->get('exchange'),
-                'routing_key' => $msg->get('routing_key'),
-                'reply_to' => $msg->has('reply_to') ? $msg->get('reply_to') : null,
-            ];
-            $interpreter->$method(Json::decode($msg->body, true), $info);
+            $interpreter->$method(
+                Json::decode($msg->body, true),
+                $msg->delivery_info['channel'],
+                $msg->delivery_info['delivery_tag']
+            );
         } else {
             if (!isset($this->interpreters[$this->exchange])) {
                 $interpreter = new AmqpInterpreter();
@@ -67,11 +66,6 @@ class AmqpListenerController extends AmqpConsoleController
             $interpreter->log(
                 sprintf("Unknown routing key '%s' for exchange '%s'.", $routingKey, $this->exchange),
                 $interpreter::MESSAGE_ERROR
-            );
-            // debug the message
-            $interpreter->log(
-                print_r(Json::decode($msg->body, true), true),
-                $interpreter::MESSAGE_INFO
             );
         }
     }

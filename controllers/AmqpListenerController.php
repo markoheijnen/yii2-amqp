@@ -5,17 +5,14 @@
  * @license https://github.com/webtoucher/yii2-amqp/blob/master/LICENSE.md
  */
 
-namespace webtoucher\amqp\controllers;
+namespace devyk\amqp\controllers;
 
+use yii;
 use yii\console\Exception;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use PhpAmqpLib\Message\AMQPMessage;
-use webtoucher\amqp\components\Amqp;
-use webtoucher\amqp\components\AmqpInterpreter;
-use webtoucher\amqp\components\AmpqInterpreterInterface;
-use webtoucher\commands\Controller;
-
+use devyk\amqp\components\AmqpInterpreter;
 
 /**
  * AMQP listener controller.
@@ -45,7 +42,7 @@ class AmqpListenerController extends AmqpConsoleController
         if (!isset($this->interpreters[$this->exchange])) {
             $interpreter = $this;
         } elseif (class_exists($this->interpreters[$this->exchange])) {
-            $interpreter = new $this->interpreters[$this->exchange];
+            $interpreter = Yii::createObject($this->interpreters[$this->exchange]);
             if (!$interpreter instanceof AmqpInterpreter) {
                 throw new Exception(sprintf("Class '%s' is not correct interpreter class.", $this->interpreters[$this->exchange]));
             }

@@ -5,7 +5,7 @@
  * @license https://github.com/webtoucher/yii2-amqp/blob/master/LICENSE.md
  */
 
-namespace webtoucher\amqp\components;
+namespace devyk\amqp\components;
 
 use yii\helpers\Console;
 

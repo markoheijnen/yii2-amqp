@@ -5,11 +5,10 @@
  * @license https://github.com/webtoucher/yii2-amqp/blob/master/LICENSE.md
  */
 
-namespace webtoucher\amqp\components;
+namespace devyk\amqp\components;
 
 use yii\base\Component;
 use yii\base\Exception;
-use yii\helpers\Inflector;
 use yii\helpers\Json;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;

@@ -5,13 +5,11 @@
  * @license https://github.com/webtoucher/yii2-amqp/blob/master/LICENSE.md
  */
 
-namespace webtoucher\amqp\components;
+namespace devyk\amqp\components;
 
-use Yii;
+use yii;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;
-use webtoucher\amqp\components\Amqp;
-use webtoucher\commands\Controller;
 
 
 /**
@@ -26,7 +24,7 @@ use webtoucher\commands\Controller;
 trait AmqpTrait
 {
     /**
-     * @var Amqp
+     * @var \devyk\amqp\components\Amqp
      */
     protected $amqpContainer;
 
@@ -40,7 +38,7 @@ trait AmqpTrait
     /**
      * Returns AMQP object.
      *
-     * @return Amqp
+     * @return \devyk\amqp\components\Amqp
      */
     public function getAmqp()
     {

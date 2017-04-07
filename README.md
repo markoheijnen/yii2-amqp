@@ -2,24 +2,28 @@ yii2-amqp
 =========
 
 AMQP extension wrapper to communicate with RabbitMQ server. Based on [php-amqplib/php-amqplib](https://github.com/php-amqplib/php-amqplib).
+This fork provides an alternative list of the parameters to be able to listen on multiple queues with one worker.
 
 ## Installation
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
-Either run
+Add the following lines
 
 ```
-$ php composer.phar require webtoucher/yii2-amqp "*"
+...
+"repositories":[
+    {
+      "type":"git",
+      "url":"https://github.com/M0nsterLabs/yii2-migration-aware-module"
+    },
+],
+...
+"devyk/yii2-amqp": "1.0.2"
+  
 ```
 
-or add
-
-```
-"webtoucher/yii2-amqp": "*"
-```
-
-to the ```require``` section of your `composer.json` file.
+to your `composer.json` file.
 
 Add the following in your console config:
 
@@ -29,7 +33,7 @@ return [
     'components' => [
         ...
         'amqp' => [
-            'class' => 'webtoucher\amqp\components\Amqp',
+            'class' => 'devyk\amqp\components\Amqp',
             'host' => '127.0.0.1',
             'port' => 5672,
             'user' => 'your_login',
@@ -42,7 +46,7 @@ return [
     'controllerMap' => [
         ...
         'rabbit' => [
-            'class' => 'webtoucher\amqp\controllers\AmqpListenerController',
+            'class' => 'devyk\amqp\controllers\AmqpListenerController',
             'interpreters' => [
                 'my-exchange' => 'app\components\RabbitInterpreter', // interpreters for each exchange
             ],
@@ -61,10 +65,22 @@ Add messages interpreter class `@app/components/RabbitInterpreter` with your han
 namespace app\components;
 
 use webtoucher\amqp\components\AmqpInterpreter;
+use app/services/ExampleServiceInterface;
 
 
 class RabbitInterpreter extends AmqpInterpreter
 {
+    protected $service;
+    
+    /**
+     * Example of passing custom service as dependency for the AmqpInterpreter
+     */
+    public function __construct(ExampleServiceInterface $exampleService)
+    {
+        $this->service = $exampleService;
+        parent::__constuct();
+    }
+    
     /**
      * Interprets AMQP message with routing key 'hello_world'.
      *
@@ -95,10 +111,10 @@ $ php yii rabbit <queue_name> --exchange=<exchange_name>
 to listen multiple queues with one worker
 
 ```bash
-$ php yii rabbit <queue_name>, <queue_name_1>
+$ php yii rabbit <queue_name>, <queue_name_1> --exchange=<exchange_name>
 ```
 
 Also you can create controllers for your needs. Just use for your web controllers class
-`webtoucher\amqp\controllers\AmqpConsoleController` instead of `yii\web\Controller` and for your console controllers
-class `webtoucher\amqp\controllers\AmqpConsoleController` instead of `yii\console\Controller`. AMQP connection will be
+`devyk\amqp\controllers\AmqpConsoleController` instead of `yii\web\Controller` and for your console controllers
+class `devyk\amqp\controllers\AmqpConsoleController` instead of `yii\console\Controller`. AMQP connection will be
 available with property `connection`. AMQP channel will be available with property `channel`.

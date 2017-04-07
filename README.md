@@ -64,8 +64,8 @@ Add messages interpreter class `@app/components/RabbitInterpreter` with your han
 
 namespace app\components;
 
-use webtoucher\amqp\components\AmqpInterpreter;
-use app/services/ExampleServiceInterface;
+use devyk\amqp\components\AmqpInterpreter;
+use app\services\ExampleServiceInterface;
 
 
 class RabbitInterpreter extends AmqpInterpreter
@@ -78,7 +78,7 @@ class RabbitInterpreter extends AmqpInterpreter
     public function __construct(ExampleServiceInterface $exampleService)
     {
         $this->service = $exampleService;
-        parent::__constuct();
+        parent::__construct();
     }
     
     /**
@@ -112,6 +112,12 @@ to listen multiple queues with one worker
 
 ```bash
 $ php yii rabbit <queue_name>, <queue_name_1> --exchange=<exchange_name>
+```
+
+to enable auto acknowledge
+
+```bash
+$ php yii rabbit <queue_name>, <queue_name_1> --noAck=true
 ```
 
 Also you can create controllers for your needs. Just use for your web controllers class

@@ -163,15 +163,14 @@ class Amqp extends Component
     /**
      * Listens the queues for messages.
      *
-     * @param string $exchange
-     * @param string $routing_key
+     * @param array $queueNames
      * @param callable $callback
-     * @param string $type
+     * @param bool $noAck
      */
-    public function listen(array $queueNames, $callback)
+    public function listen(array $queueNames, callable $callback, $noAck = false)
     {
-        array_map(function($queue) use ($callback) {
-            $this->channel->basic_consume($queue, '', false, true, false, false, $callback);
+        array_map(function($queue) use ($callback, $noAck) {
+            $this->channel->basic_consume($queue, '', false, $noAck, false, false, $callback);
         }, $queueNames);
 
         while (count($this->channel->callbacks)) {

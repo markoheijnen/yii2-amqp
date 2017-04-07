@@ -36,6 +36,13 @@ trait AmqpTrait
     public $exchange = 'exchange';
 
     /**
+     * Acknowledgment flag.
+     *
+     * @var bool
+     */
+    public $noAck = false;
+
+    /**
      * Returns AMQP object.
      *
      * @return \devyk\amqp\components\Amqp

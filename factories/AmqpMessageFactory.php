@@ -2,17 +2,18 @@
 
 namespace devyk\amqp\factories;
 
+use yii\helpers\ArrayHelper;
 use devyk\amqp\components\AmqpMessage;
 
 class AmqpMessageFactory implements FactoryInterface
 {
     /**
-     * @param array $data
-     * @param array $properties
+     * @param array $config
      * @return AmqpMessage
      */
-    public function create(array $data = [], array $properties = [])
+    public function create(array $config = [])
     {
-        return (new AmqpMessage('', $properties))->setBody($data);
+        $message = new AmqpMessage('', ArrayHelper::getValue($config, 'properties', []));
+        return $message->setBody(ArrayHelper::getValue($config, 'body', []));
     }
 }

@@ -5,8 +5,8 @@ namespace devyk\amqp\factories;
 interface FactoryInterface
 {
     /**
-     * @param array $data
+     * @param array $config
      * @return Object
      */
-    public function create(array $data = []);
+    public function create(array $config = []);
 }

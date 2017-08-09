@@ -12,6 +12,7 @@ use yii\base\Exception;
 use yii\helpers\Json;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;
+use PhpAmqpLib\Connection\AMQPSSLConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 
@@ -75,13 +76,28 @@ class Amqp extends Component
             throw new Exception("Parameter 'user' was not set for AMQP connection.");
         }
         if (empty(self::$ampqConnection)) {
-            self::$ampqConnection = new AMQPConnection(
-                $this->host,
-                $this->port,
-                $this->user,
-                $this->password,
-                $this->vhost
-            );
+            if ($this->port == 5671) {
+                self::$ampqConnection = new AMQPSSLConnection(
+                    $this->host,
+                    $this->port,
+                    $this->user,
+                    $this->password,
+                    $this->vhost,
+                    [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ]
+                );
+            }
+            else {
+                self::$ampqConnection = new AMQPConnection(
+                    $this->host,
+                    $this->port,
+                    $this->user,
+                    $this->password,
+                    $this->vhost
+                );
+            }
         }
     }
 

@@ -191,6 +191,10 @@ class Amqp extends Component
      */
     public function prepareMessage($message, $properties = null)
     {
+        if ($message instanceof AMQPMessage) {
+            return $message;
+        }
+
         if (empty($message)) {
             throw new Exception('AMQP message can not be empty');
         }
